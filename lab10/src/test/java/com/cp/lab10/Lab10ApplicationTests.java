@@ -60,17 +60,27 @@ class Lab10ApplicationTests {
 		// Hint: StepVerifier.create(repository.findAll())
 		// .expectNextCount(3) ← มี 3 รายการ
 		// .verifyComplete()
+		StepVerifier.create(repository.findAll())
+				.expectNextCount(3)
+				.verifyComplete();
 	}
 
 	@Test
 	void testSave() {
 		// TODO: ทดสอบ save() บันทึกแล้วคืน Product
 		// Hint: สร้าง Product ใหม่ → save → expectNext → verifyComplete
+		Product newProduct = new Product("4", "iPad Pro", "Electronics", "Apple", 10, 35000.0, "NONE");
+		StepVerifier.create(repository.save(newProduct))
+				.expectNextMatches(p -> p.getId().equals("4") && p.getName().equals("iPad Pro"))
+				.verifyComplete();
 	}
 
 	@Test
 	void testFindByCategory() {
 		// TODO: ทดสอบ findByCategory("Electronics")
 		// Hint: expectNextCount(3) เพราะมี 3 รายการใน Electronics
+		StepVerifier.create(repository.findByCategory("Electronics"))
+				.expectNextCount(3)
+				.verifyComplete();
 	}
 }

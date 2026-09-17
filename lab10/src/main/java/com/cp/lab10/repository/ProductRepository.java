@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.stereotype.Repository;
+
 /**
  * ProductRepository — In-memory Reactive Repository
  *
@@ -21,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Mono.empty() คืนเปล่า
  * - Flux.fromIterable(list) คืนหลายค่าจาก collection
  */
+@Repository
 public class ProductRepository {
 
     // ── In-memory storage ────────────────────────────────
@@ -47,7 +50,7 @@ public class ProductRepository {
      */
     public Mono<Product> findById(String id) {
         // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
+        return Mono.justOrEmpty(store.get(id)); //
     }
 
     // ── 2. หา Product ทั้งหมด ────────────────────────────
@@ -59,7 +62,7 @@ public class ProductRepository {
      */
     public Flux<Product> findAll() {
         // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
+        return Flux.fromIterable(store.values());
     }
 
     // ── 3. บันทึก Product ────────────────────────────────
@@ -71,7 +74,8 @@ public class ProductRepository {
      */
     public Mono<Product> save(Product product) {
         // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
+        store.put(product.getId(), product);
+        return Mono.just(product);
     }
 
     // ── 4. ลบ Product ────────────────────────────────────
@@ -83,7 +87,8 @@ public class ProductRepository {
      */
     public Mono<Void> deleteById(String id) {
         // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
+        store.remove(id);
+        return Mono.empty();
     }
 
     // ── 5. กรองตาม category ──────────────────────────────
@@ -95,6 +100,7 @@ public class ProductRepository {
      */
     public Flux<Product> findByCategory(String category) {
         // TODO: เติม code ตรงนี้
-        return null; // ← แก้บรรทัดนี้
+        return Flux.fromIterable(store.values())
+                .filter(product -> product.getCategory().equalsIgnoreCase(category));
     }
 }
