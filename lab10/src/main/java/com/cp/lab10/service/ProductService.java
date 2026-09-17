@@ -64,7 +64,10 @@ public class ProductService {
     public Mono<Product> save(Product product) {
         // TODO: เติม code ตรงนี้
         if (product.getId() == null || product.getId().isEmpty()) {
-            product.setId(java.util.UUID.randomUUID().toString());
+            return repository.findAll().count().flatMap(count -> {
+                product.setId(String.valueOf(count + 1));
+                return repository.save(product);
+            });
         }
         return repository.save(product);
     }
